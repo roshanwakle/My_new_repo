@@ -1,8 +1,10 @@
 name: "SF Workflow"
 run-name: "SF workflow is running pipeline"
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 on:
   push:
-  pull_request:
 jobs:
    setup-salforce:
         name: "Setup Salesforce CLI"
