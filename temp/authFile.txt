@@ -1,0 +1,1 @@
+sf org login sfdx-url --sfdx-url-file force://PlatformCLI::5Aep861eN26Sp9j0R5mNM4upD5OxdhX0aAevjOitsaMap0o.d3jMp3RFeddC44Y17CltSYgMmIKVRiIvxhctkLM@orgfarm-ba80341333-dev-ed.develop.my.salesforce.com/authFile.json --set-default --alias MyDefaultOrg

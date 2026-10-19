@@ -20,4 +20,5 @@ jobs:
               sf --help
               sf plugins install code-analyzer
 
-          
+          - name: "Authenticate to Salesforce"
+            run: sf org login sfdx-url --sfdx-url-file temp/authFile.txt --set-default --alias MyDefaultOrg
