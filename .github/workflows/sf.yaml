@@ -1,0 +1,24 @@
+name: "SF Workflow"
+run-name: "SF workflow is running pipeline"
+on:
+  push:
+  pull_request:
+jobs:
+   setup-salforce:
+        name: "Setup Salesforce CLI"
+        runs-on: ubuntu-latest
+
+        steps: 
+          - name: "setup saleforce cli"
+            run: npm install --global @salesforce/cli@latest
+
+          - name: "Check Salesforce CLI version"
+            run: sfdx --version
+          
+          - name: "Install salesforce analyser"
+            run: |
+              sf --help
+              sf plugins install code-analyzer
+
+          - name: "Authenticate to Salesforce"
+            run: sf org login sfdx-url --sfdx-url-file temp/authFile.txt --set-default --alias MyDefaultOrg
