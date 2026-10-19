@@ -3,14 +3,58 @@ run-name: "Ci pipline is running"
 
 on: 
   push:
+  pull_request:
+  issue_comment:   
 
 jobs:
-  build-and-validate:
-    name: 
-    runs-on: ubuntu-latest
+  build:
+   runs-on: ubuntu-latest
+   steps:  #A sequence of task that will be execute
+     - name: "Checkout" #name of step
+       uses: action/checkout@v2
+       with:
+         fetch-depth: 0
+     - name: "Run a one liner script"
+       run: echo "hello world"
 
-    steps:
-      - name: Print
-        run: echo "This is my first pipeline"
+     - name: "Run a multi line script"
+       run: |
+        echo "This is first line"
+        echo "This is second line"
+        echo "This is third line"
+        
+ test: 
+   runs-on: ubuntu-latest
+   steps:
+     - name: "Checkot"
+       uses: action/checkout@2
+       with:
+        fetch-depth: 0
+     - name: "Run a one liner script"
+       run: echo "hello world"
+
+     - name: "Run a multi line script"
+       run: |
+        echo "This is first line"
+        echo "This is second line"
+        echo "This is third line"   
+
+ deploy: 
+   needs:[build,test]
+   runs-on: ubuntu-latest
+   steps:
+     - name: "Checkot"
+       uses: action/checkout@2
+       with:
+        fetch-depth: 0
+     - name: "Run a one liner script"
+       run: echo "hello world"
+
+     - name: "Run a multi line script"
+       run: |
+        echo "This is first line"
+        echo "This is second line"
+        echo "This is third line"        
+       
 
         
