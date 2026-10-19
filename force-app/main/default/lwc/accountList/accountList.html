@@ -1,0 +1,19 @@
+<template>
+    <lightning-card title="Recent Accounts" icon-name="standard:account">
+        <div class="slds-m-around_medium">
+            <template lwc:if={errorMessage}>
+                <p class="slds-text-color_error">{errorMessage}</p>
+            </template>
+            <template lwc:elseif={hasAccounts}>
+                <ul>
+                    <template for:each={accounts} for:item="acc">
+                        <li key={acc.Id}>{acc.Name}</li>
+                    </template>
+                </ul>
+            </template>
+            <template lwc:else>
+                <p>No accounts found.</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>

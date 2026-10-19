@@ -1,0 +1,19 @@
+# Salesforce CLI local state
+.sfdx/
+.sf/
+.localdevserver/
+
+# Node
+node_modules/
+npm-debug.log*
+coverage/
+
+# Secrets - never commit these
+authurl.txt
+*.auth
+.env
+
+# OS / editor
+.DS_Store
+.idea/
+*.log
