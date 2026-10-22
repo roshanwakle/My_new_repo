@@ -44,4 +44,4 @@ jobs:
             run: sf project deploy start --source-dir force-app --target-org MyDefaultOrg --wait 10  
 
           - name: "Assighn permission set to user"
-            run: sf org assign permset --perm-set-name MyPermissionSet --target-org MyDefaultOrg
+            run: sf org assign permset --name MyPermissionSet --target-org MyDefaultOrg
