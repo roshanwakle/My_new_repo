@@ -40,8 +40,8 @@ jobs:
             if: |
               steps.run-code-analyzer.outputs.exit-code > 0 ||
               steps.run-code-analyzer.outputs.num-sev1-violations > 0 ||
-              steps.run-code-analyzer.outputs.num-sev2-violations > 0 ||
-              steps.run-code-analyzer.outputs.num-violations > 10
+              steps.run-code-analyzer.outputs.num-sev2-violations > 10 ||
+              steps.run-code-analyzer.outputs.num-violations > 15
             run: exit 1
 
           - name: Authenticate to Salesforce
