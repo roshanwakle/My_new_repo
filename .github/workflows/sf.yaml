@@ -1,0 +1,96 @@
+name: "SF Workflow"
+run-name: "SF workflow is running pipeline"
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+on:
+  workflow_dispatch: #Use for manual deployment of pipeline
+    inputs:
+      environment:
+        description: 'Select the environment to deploy'
+        required: true
+        default: 'UAT'
+        type: choice
+        options:
+          - UAT
+          - Production
+          - main
+  push:
+    paths:
+      - 'force-app/**' #it avoid the unwanted triggering of pipeline ,it only triger withe changes occuer in the this folder
+    branches:          # pipeline work only wjen this branches strictly match with the below mention branches
+      - main
+      - develop
+      - hotfix/**
+      - release/**
+      - UAT
+      - feature/**
+      
+  pull_request:  # pipeline work only wjen this branches strictly match with the below mention branches
+    types: [opened, synchronize, reopened] # pipeline work only wjen this branches strictly match with the below mention branches
+    paths:
+      - 'force-app/**'
+    branches:
+      - main
+      - develop
+      - hotfix/**
+      - release/**
+      - UAT
+      - feature/**
+
+jobs:
+   setup-salforce:
+        name: "Setup Salesforce CLI"
+        runs-on: ubuntu-latest
+
+        steps: 
+          - name: "Checkout"
+            uses: actions/checkout@v4
+            with:
+              fetch-depth: 0
+
+          - name: "setup saleforce cli"
+            run: npm install --global @salesforce/cli@latest
+
+          - name: "Check Salesforce CLI version"
+            run: sfdx --version
+          
+          - name: "Install salesforce analyser"
+            run: |
+              sf --help
+              sf plugins install code-analyzer
+              
+          - name: Run Salesforce Code Analyzer
+            id: run-code-analyzer
+            uses: forcedotcom/run-code-analyzer@v2
+            with:
+              run-arguments: --workspace . --view detail --output-file sfca_results.html --output-file sfca_results.json
+              results-artifact-name: salesforce-code-analyzer-results
+              github-token: ${{ github.token }}
+
+              # Option 1: Quality gate on ALL files in the repository
+          - name: Fail on Critical/High Violations (All Files)
+            if: |
+              steps.run-code-analyzer.outputs.exit-code > 0 ||
+              steps.run-code-analyzer.outputs.num-sev1-violations > 0 ||
+              steps.run-code-analyzer.outputs.num-sev2-violations > 10 ||
+              steps.run-code-analyzer.outputs.num-violations > 15
+            run: exit 0
+
+          - name: Authenticate to Salesforce
+            env:
+              SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
+            run: |
+              test -n "$SFDX_AUTH_URL" || { echo "SFDX_AUTH_URL secret is missing"; exit 1; }
+              auth_file="$RUNNER_TEMP/sfdx-auth-url"
+              umask 077
+              printf '%s' "$SFDX_AUTH_URL" > "$auth_file"
+              sf org login sfdx-url \
+                --sfdx-url-file "$auth_file" \
+                --set-default --alias MyDefaultOrg
+              rm -f "$auth_file"
+
+          - name: "Deploy to saleforce"
+            run: sf project deploy start --source-dir force-app --target-org MyDefaultOrg --wait 10  
+
+        

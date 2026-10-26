@@ -1,0 +1,9 @@
+# Files that should not be deployed to or retrieved from an org
+package.xml
+
+# LWC configuration files
+**/jsconfig.json
+**/.eslintrc.json
+
+# LWC Jest tests
+**/__tests__/**
