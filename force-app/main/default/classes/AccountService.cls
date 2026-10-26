@@ -11,6 +11,7 @@ public with sharing class AccountService {
         return [
             SELECT Id, Name, Industry, Phone
             FROM Account
+            WITH USER_MODE
             ORDER BY CreatedDate DESC
             LIMIT :safeLimit
         ];
