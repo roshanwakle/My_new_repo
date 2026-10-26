@@ -6,6 +6,32 @@ concurrency:
 on:
   workflow_dispatch: #Use for manual deployment of pipeline
     inputs:
+      test-level:
+        description: 'Select the test level for deployment'
+        required: true
+        default: 'RunLocalTests'
+        type: choice
+        options:
+          - RunLocalTests
+          - RunAllTestsInOrg
+          - RunSpecifiedTests
+          - NoTestRun
+          
+      messsage:
+        description: 'Enter the message for deployment'
+        required: true
+        default: 'Deployment from GitHub Actions'
+        type: string
+      runner:
+        description: 'Select the runner for deployment'
+        required: true
+        default: 'ubuntu-latest'
+        type: choice
+        options:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+
       environment:
         description: 'Select the environment to deploy'
         required: true
