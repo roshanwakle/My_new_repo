@@ -4,6 +4,17 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 on:
+  workflow_dispatch: #Use for manual deployment of pipeline
+    inputs:
+      environment:
+        description: 'Select the environment to deploy'
+        required: true
+        default: 'UAT'
+        type: choice
+        options:
+          - UAT
+          - Production
+          - main
   push:
     paths:
       - 'force-app/**' #it avoid the unwanted triggering of pipeline ,it only triger withe changes occuer in the this folder
