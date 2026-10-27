@@ -1,59 +1,34 @@
-name: CI Pipeline
-run-name: "CI pipeline is running"
+name: Pull Request Validation
 
 on:
   push:
+    branches:
+      - 'feature/**'
+    paths:
+      - 'force-app/**'
+      - 'manifest/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/**'
   pull_request:
+    branches:
+      - dev
+      - UAT
+      - main
+    paths:
+      - 'force-app/**'
+      - 'manifest/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/**'
+
+permissions:
+  contents: read
+  pull-requests: write
+  actions: read
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps: # A sequence of tasks that will be executed
-      - name: "Checkout" # name of step
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: "Run a one liner script"
-        run: echo "hello world"
-
-      - name: "Run a multi line script"
-        run: |
-          echo "This is first line"
-          echo "This is second line"
-          echo "This is third line"
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Checkout"
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: "Run a one liner script"
-        run: echo "hello world"
-
-      - name: "Run a multi line script"
-        run: |
-          echo "This is first line"
-          echo "This is second line"
-          echo "This is third line"
-
-  deploy:
-    needs: [build, test]
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Checkout"
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: "Run a one liner script"
-        run: echo "hello world"
-
-      - name: "Run a multi line script"
-        run: |
-          echo "This is first line"
-          echo "This is second line"
-          echo "This is third line"
+  validate:
+    uses: ./.github/workflows/template.yaml
+    with:
+      deploy: false
