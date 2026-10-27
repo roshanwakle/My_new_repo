@@ -8,7 +8,8 @@ jest.mock(
     { virtual: true }
 );
 
-const flushPromises = () => new Promise((resolve) => setTimeout(resolve, 0));
+const flushPromises = () =>
+    Promise.resolve().then(() => Promise.resolve());
 
 function mountComponent() {
     const element = createElement('c-account-list', { is: AccountList });
