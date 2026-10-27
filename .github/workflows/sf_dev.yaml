@@ -1,0 +1,24 @@
+name: Deploy Development
+
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - 'force-app/**'
+      - 'manifest/**'
+      - 'sfdx-project.json'
+
+permissions:
+  contents: read
+  pull-requests: write
+  actions: read
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/template.yaml
+    with:
+      deploy: true
+      target_environment: dev
+      test_level: RunLocalTests
+    secrets: inherit
